@@ -23,6 +23,14 @@ class InputSystem {
         }
 
     }
+    releaseKeys() {
+        this.frameState.w = this.currentState.w;
+        this.frameState.a = this.currentState.a;
+        this.frameState.s = this.currentState.s;
+        this.frameState.d = this.currentState.d;
+        this.frameState.r = this.currentState.r;
+        this.frameState.mouseDown = this.currentState.mouseDown;
+    }
 }
 
 export default InputSystem

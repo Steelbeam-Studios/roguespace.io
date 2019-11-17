@@ -1,7 +1,5 @@
 
 class NetworkUtils{
-//TODO: since this gets passed self, can move it to a separate script and use
-//it to call
     static createEntity(self, entity) {
         if (entity.protocol.name === 'PlayerCharacter') {
             var player;
@@ -18,7 +16,6 @@ class NetworkUtils{
         }
     }
 
-// as above
     static deleteEntity(self, nid) {
         const entity = self.entities.get(nid);
         if (entity) {
@@ -27,14 +24,21 @@ class NetworkUtils{
             self.entities.delete(nid);
         }
     }
+    
+    static updateEntity(self, update) {
+        const entity = self.entities.get(update.nid);
+        //TODO: right now entity is an image, and update contains information on hp and being alive or not
+        //change createEntity such that the local entity contains own thin client character data and the image is just a member object
+        entity[update.prop] = update.value;
+    }
 
-//TODO: as above, move away from main runner
     static processMessage(self, message) {
         if (message.protocol.name === 'Identity') {
             self.myId = message.entityId;
             console.log('identified as', self.myId);
         }
     }
+
 }
 
 export default NetworkUtils

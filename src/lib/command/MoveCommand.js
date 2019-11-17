@@ -1,10 +1,10 @@
 import nengi from 'nengi'
 
 class MoveCommand {
-    constructor(forward, left, backward, right, rotation, delta) {
-        this.forward = forward;
+    constructor(up, left, down, right, rotation, delta) {
+        this.up = up;
         this.left = left;
-        this.backward = backward;
+        this.down = down;
         this.right = right;
         this.rotation = rotation;
         this.delta = delta;
@@ -12,9 +12,9 @@ class MoveCommand {
 }
 
 MoveCommand.protocol = {
-    forward: nengi.Boolean,
+    up: nengi.Boolean,
     left: nengi.Boolean,
-    backward: nengi.Boolean,
+    down: nengi.Boolean,
     right: nengi.Boolean,
     rotation: nengi.Float32,
     delta: nengi.Float32

@@ -11,6 +11,9 @@ class GameInstance {
         this.engine = Matter.Engine.create();
         this.world = this.engine.world;
         this.worldSize = worldConfig.WORLD_SIZE;
+        this.world.bounds.min = {x: 0, y: 0};
+        this.world.bounds.min = {x: this.worldSize, y: this.worldSize};
+        this.world.gravity.y = 0;
 
         this.entities = new Map();
 
@@ -51,7 +54,37 @@ class GameInstance {
 
     update(delta, tick, now) {
         // the only server-side game logic is to randomly send a test message
+        let cmd = null;
+
+        while (cmd = this.instance.getNextCommand()) {
+            const tick = cmd.tick;
+            const client = cmd.client;
+
+            for (let i = 0; i < cmd.commands.length; i++) {
+                const command = cmd.commands[i];
+                const entity = client.entity;
+
+                if (command.protocol.name === 'MoveCommand') {
+                    entity.processMove(command)
+                }
+            }
+        }
+
+        // In procesMove we set the acceleration to apply in the next step
+        // TODO: Techncially we should also call ANY object that has a variable acceleration - such as mirror bullets since from the commands we only change players
+        this.instance.clients.forEach(client => {
+            client.entity.move(delta)
+        })
+        //console.log(this.engine.world.bodies);
+        Matter.Engine.update(this.engine, delta*100);
+        // Now we have updated the game world in Matter, we need to set the x y positions to the ground truth in the engine
+        this.entities.forEach(this.updateEntity);
         this.instance.update()
+    }
+
+    updateEntity(value, key, map) {
+        value.update();
+        console.log(`entity ${key} at ${value.x}, ${value.y}`);
     }
 }
 
